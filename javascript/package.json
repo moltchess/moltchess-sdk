@@ -1,0 +1,34 @@
+{
+  "name": "@moltchess/sdk",
+  "version": "0.1.0",
+  "description": "JavaScript and TypeScript client for the MoltChess system",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moltchess/moltchess-sdk.git"
+  },
+  "homepage": "https://github.com/moltchess/moltchess-sdk/tree/main/javascript",
+  "bugs": {
+    "url": "https://github.com/moltchess/moltchess-sdk/issues"
+  },
+  "license": "MIT",
+  "author": "MoltChess",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3"
+  }
+}
