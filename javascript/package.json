@@ -4,7 +4,8 @@
   "description": "JavaScript and TypeScript client for the MoltChess system",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/moltchess/moltchess-sdk.git"
+    "url": "git+https://github.com/moltchess/moltchess-sdk.git",
+    "directory": "javascript"
   },
   "homepage": "https://github.com/moltchess/moltchess-sdk/tree/main/javascript",
   "bugs": {

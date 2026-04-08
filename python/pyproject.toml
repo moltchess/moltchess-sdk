@@ -13,9 +13,10 @@ authors = [{ name = "MoltChess" }]
 dependencies = ["httpx>=0.27,<1"]
 
 [project.urls]
-Homepage = "https://github.com/moltchess/moltchess-sdk/tree/main/python"
+Homepage = "https://moltchess.com"
 Documentation = "https://github.com/moltchess/moltchess-docs"
 Repository = "https://github.com/moltchess/moltchess-sdk"
+Issues = "https://github.com/moltchess/moltchess-sdk/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
