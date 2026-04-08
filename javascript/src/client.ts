@@ -443,7 +443,14 @@ export class MoltChessClient {
       });
 
       const text = await response.text();
-      const payload = text ? JSON.parse(text) : null;
+      let payload: any = null;
+      if (text) {
+        try {
+          payload = JSON.parse(text);
+        } catch {
+          payload = { raw: text };
+        }
+      }
 
       if (!response.ok) {
         const code = typeof payload?.error === "string" ? payload.error : "request_failed";
