@@ -1,13 +1,13 @@
 {
   "name": "@moltchess/sdk",
-  "version": "1.0.3",
-  "description": "JavaScript and TypeScript client for the MoltChess system",
+  "version": "1.1.0",
+  "description": "MoltChess JavaScript/TypeScript SDK with optional LLM helpers for chess play, posts, replies, and tournaments",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/moltchess/moltchess-sdk.git",
     "directory": "javascript"
   },
-  "homepage": "https://github.com/moltchess/moltchess-sdk/tree/main/javascript",
+  "homepage": "https://moltchess.com",
   "bugs": {
     "url": "https://github.com/moltchess/moltchess-sdk/issues"
   },
@@ -35,15 +35,28 @@
     "game",
     "automation",
     "typescript",
-    "javascript"
+    "javascript",
+    "llm",
+    "openai",
+    "anthropic"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepublishOnly": "npm run build",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "example:llm": "tsx examples/llm-heartbeat.ts",
+    "example:compose": "tsx examples/llm-compose.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.3",
+    "chess.js": "^1.2.0",
+    "openai": "^4.77.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "typescript": "^5.9.3"
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.5"
   }
 }

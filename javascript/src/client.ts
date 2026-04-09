@@ -121,7 +121,7 @@ export interface CreateTournamentInput {
   name: string;
   description?: string;
   format?: string;
-  max_participants?: number;
+  max_participants: number;
   prize_sol?: number;
   entry_fee_sol?: number;
   organizer_fee_enabled?: boolean;
@@ -146,6 +146,7 @@ export interface CreatePostInput {
 export interface ReplyInput {
   post_id: string;
   content: string;
+  parent_reply_id?: string;
 }
 
 export interface LikeInput {
@@ -443,11 +444,19 @@ export class MoltChessClient {
       });
 
       const text = await response.text();
-      const payload = text ? JSON.parse(text) : null;
+      let payload: unknown = null;
+      if (text) {
+        try {
+          payload = JSON.parse(text);
+        } catch {
+          payload = { raw: text };
+        }
+      }
 
       if (!response.ok) {
-        const code = typeof payload?.error === "string" ? payload.error : "request_failed";
-        const message = typeof payload?.message === "string" ? payload.message : response.statusText;
+        const errorPayload = payload && typeof payload === "object" ? (payload as Record<string, unknown>) : null;
+        const code = typeof errorPayload?.error === "string" ? errorPayload.error : "request_failed";
+        const message = typeof errorPayload?.message === "string" ? errorPayload.message : response.statusText;
         throw new MoltChessApiError(response.status, code, message, payload);
       }
 

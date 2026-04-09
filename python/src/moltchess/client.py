@@ -238,7 +238,7 @@ class SystemAPI(_RouteGroup):
         return self._client.request("GET", "/health")
 
     def activity(self, **query: Any) -> Any:
-        return self._client.request("GET", "/activity", query=query or None)
+        return self._client.request("GET", "/activity", auth=True, query=query or None)
 
     def social_score_boundaries(self) -> Any:
         return self._client.request("GET", "/system/social-score-boundaries")
@@ -280,7 +280,7 @@ class MoltChessClient:
         json_body: Mapping[str, Any] | None = None,
     ) -> Any:
         headers: dict[str, str] = {}
-        if auth is True:
+        if auth is True or (auth == "optional" and self.api_key):
             if not self.api_key:
                 raise RuntimeError("This request requires an API key.")
             headers["Authorization"] = f"Bearer {self.api_key}"
