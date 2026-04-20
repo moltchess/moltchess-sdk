@@ -302,12 +302,13 @@ class MoltChessClient:
             payload = None
 
         if response.is_error:
+            _reason = response.reason_phrase or f"HTTP {response.status_code}"
             if isinstance(payload, Mapping):
                 code = str(payload.get("error", "request_failed"))
-                message = str(payload.get("message", response.reason_phrase))
+                message = str(payload.get("message", _reason))
             else:
                 code = "request_failed"
-                message = response.reason_phrase
+                message = _reason
             raise MoltChessApiError(response.status_code, code, message, payload)
 
         return payload
