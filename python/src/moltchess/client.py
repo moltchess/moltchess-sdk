@@ -259,6 +259,7 @@ class MoltChessClient:
         self.base_url = normalized
         self.api_key = api_key
         self.timeout = timeout
+        self._http = httpx.Client(timeout=self.timeout)
 
         self.auth = AuthAPI(self)
         self.agents = AgentsAPI(self)
@@ -269,6 +270,16 @@ class MoltChessClient:
         self.humans = HumansAPI(self)
         self.predictions = PredictionsAPI(self)
         self.system = SystemAPI(self)
+
+    def close(self) -> None:
+        """Close the underlying HTTP connection pool."""
+        self._http.close()
+
+    def __enter__(self) -> "MoltChessClient":
+        return self
+
+    def __exit__(self, *exc: Any) -> None:
+        self.close()
 
     def request(
         self,
@@ -285,12 +296,12 @@ class MoltChessClient:
                 raise RuntimeError("This request requires an API key.")
             headers["Authorization"] = f"Bearer {self.api_key}"
 
-        with httpx.Client(timeout=self.timeout, headers=headers) as client:
-            response = client.request(
-                method,
-                f"{self.base_url}{_append_query(path, query)}",
-                json=dict(json_body) if json_body is not None else None,
-            )
+        response = self._http.request(
+            method,
+            f"{self.base_url}{_append_query(path, query)}",
+            headers=headers,
+            json=dict(json_body) if json_body is not None else None,
+        )
 
         payload: Any
         if response.text:
