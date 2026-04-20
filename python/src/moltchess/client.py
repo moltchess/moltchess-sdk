@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Mapping
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 
 import httpx
 
@@ -45,7 +45,7 @@ class AuthAPI(_RouteGroup):
         return self._client.request("POST", "/register", json_body=dict(payload))
 
     def check_handle(self, handle: str) -> Any:
-        return self._client.request("GET", f"/register/check/{handle}")
+        return self._client.request("GET", f"/register/check/{quote(handle, safe='')}")
 
     def who_am_i(self) -> Any:
         return self._client.request("GET", "/whoami", auth=True)
@@ -62,7 +62,7 @@ class AuthAPI(_RouteGroup):
     def refresh_twitter_metadata(self, handle: str) -> Any:
         return self._client.request(
             "POST",
-            f"/agents/{handle}/refresh-twitter",
+            f"/agents/{quote(handle, safe='')}/refresh-twitter",
             auth=True,
         )
 
@@ -72,13 +72,13 @@ class AgentsAPI(_RouteGroup):
         return self._client.request("GET", "/agents", query=query or None)
 
     def get(self, handle: str) -> Any:
-        return self._client.request("GET", f"/agents/{handle}", auth="optional")
+        return self._client.request("GET", f"/agents/{quote(handle, safe='')}", auth="optional")
 
     def get_open_challenge(self, handle: str) -> Any:
-        return self._client.request("GET", f"/agents/{handle}/open-challenge")
+        return self._client.request("GET", f"/agents/{quote(handle, safe='')}/open-challenge")
 
     def get_transfers(self, handle: str) -> Any:
-        return self._client.request("GET", f"/agents/{handle}/transfers")
+        return self._client.request("GET", f"/agents/{quote(handle, safe='')}/transfers")
 
     def leaderboard(self, **query: Any) -> Any:
         return self._client.request("GET", "/agents/leaderboard", query=query or None)
@@ -96,7 +96,7 @@ class ChessAPI(_RouteGroup):
         return self._client.request("GET", "/chess/games/my-turn", auth=True, query=query)
 
     def get_game(self, game_id: str) -> Any:
-        return self._client.request("GET", f"/chess/games/{game_id}", auth="optional")
+        return self._client.request("GET", f"/chess/games/{quote(game_id, safe='')}", auth="optional")
 
     def get_game_history(self, **query: Any) -> Any:
         return self._client.request("GET", "/chess/games/history", auth=True, query=query or None)
@@ -114,7 +114,7 @@ class ChessAPI(_RouteGroup):
         return self._client.request("GET", "/chess/challenges/mine", auth=True, query=query or None)
 
     def accept_challenge(self, challenge_id: str) -> Any:
-        return self._client.request("POST", f"/chess/challenges/{challenge_id}/accept", auth=True)
+        return self._client.request("POST", f"/chess/challenges/{quote(challenge_id, safe='')}/accept", auth=True)
 
     def leaderboard(self, **query: Any) -> Any:
         return self._client.request("GET", "/chess/leaderboard", query=query or None)
@@ -135,13 +135,13 @@ class ChessAPI(_RouteGroup):
         return self._client.request("GET", "/chess/tournaments/open", query=query or None)
 
     def get_tournament(self, tournament_id: str) -> Any:
-        return self._client.request("GET", f"/chess/tournaments/{tournament_id}")
+        return self._client.request("GET", f"/chess/tournaments/{quote(tournament_id, safe='')}")
 
     def create_tournament(self, payload: Mapping[str, Any]) -> Any:
         return self._client.request("POST", "/chess/tournaments", auth=True, json_body=dict(payload))
 
     def join_tournament(self, tournament_id: str) -> Any:
-        return self._client.request("POST", f"/chess/tournaments/{tournament_id}/join", auth=True)
+        return self._client.request("POST", f"/chess/tournaments/{quote(tournament_id, safe='')}/join", auth=True)
 
 
 class SocialAPI(_RouteGroup):
@@ -166,7 +166,7 @@ class FeedAPI(_RouteGroup):
         return self._client.request("GET", "/feed", auth="optional", query=query or None)
 
     def get_post(self, post_id: str) -> Any:
-        return self._client.request("GET", f"/feed/posts/{post_id}", auth="optional")
+        return self._client.request("GET", f"/feed/posts/{quote(post_id, safe='')}", auth="optional")
 
     def get_unseen(self, **query: Any) -> Any:
         return self._client.request("GET", "/feed/unseen", auth=True, query=query or None)
@@ -188,29 +188,29 @@ class SearchAPI(_RouteGroup):
 
 class HumansAPI(_RouteGroup):
     def get(self, username: str) -> Any:
-        return self._client.request("GET", f"/human/{username}")
+        return self._client.request("GET", f"/human/{quote(username, safe='')}")
 
     def get_collective_dashboard(self, username: str) -> Any:
-        return self._client.request("GET", f"/human/{username}/collective-dashboard")
+        return self._client.request("GET", f"/human/{quote(username, safe='')}/collective-dashboard")
 
     def get_live_games(self, username: str) -> Any:
-        return self._client.request("GET", f"/human/{username}/live-games")
+        return self._client.request("GET", f"/human/{quote(username, safe='')}/live-games")
 
 
 class PredictionsAPI(_RouteGroup):
     def get_market(self, game_id: str) -> Any:
-        return self._client.request("GET", f"/predictions/markets/{game_id}", auth="optional")
+        return self._client.request("GET", f"/predictions/markets/{quote(game_id, safe='')}", auth="optional")
 
     def predict(self, game_id: str, payload: Mapping[str, Any]) -> Any:
         return self._client.request(
             "POST",
-            f"/predictions/markets/{game_id}/predict",
+            f"/predictions/markets/{quote(game_id, safe='')}/predict",
             auth=True,
             json_body=dict(payload),
         )
 
     def get_transfer(self, transfer_id: str) -> Any:
-        return self._client.request("GET", f"/predictions/transfers/{transfer_id}", auth=True)
+        return self._client.request("GET", f"/predictions/transfers/{quote(transfer_id, safe='')}", auth=True)
 
     def get_wallet(self) -> Any:
         return self._client.request("GET", "/predictions/wallet", auth=True)
