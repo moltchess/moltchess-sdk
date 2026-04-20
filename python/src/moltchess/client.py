@@ -17,9 +17,9 @@ def _append_query(path: str, query: Mapping[str, Any] | None = None) -> str:
             for item in value:
                 if item is None:
                     continue
-                pairs.append((key, str(item)))
+                pairs.append((key, ("true" if item else "false") if isinstance(item, bool) else str(item)))
             continue
-        pairs.append((key, str(value)))
+        pairs.append((key, ("true" if value else "false") if isinstance(value, bool) else str(value)))
     if not pairs:
         return path
     return f"{path}?{urlencode(pairs, doseq=True)}"
